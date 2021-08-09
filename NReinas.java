@@ -8,50 +8,113 @@ public class NReinas {
     public static void main(String[] args) {
         int NIND = 10; //Numero de individuos (cromosomas)
         int NREINAS = 8; //Numero de reinas
-        final int MAXGEN = 10; //Maximo numero de generaciones
+        final int MAXGEN = 5; //Maximo numero de generaciones
         algoritmoGeneticoNReinas(MAXGEN, NIND, NREINAS);
+        // int[] a = new int[] {2,4,7,3,0,6,1,5}; //Esto da 0 colisiones
+        // Cromosoma n = new Cromosoma(a);
+        // evaluaCromosoma(n);
+        // System.out.println(n.getColisiones());
     }
 
     public static void algoritmoGeneticoNReinas(int MAXGEN, int NIND, int NREINAS){
         int valorObjetivo = 0; //Numero de colisiones objetivo
         int generacionActual = 0;
         int porcentajeDeNuevosIndividuos = 70; //70 ya que se escogen 3 los tres mejores individuos y hay un maximo de 10
-        int porcentajeDeMutacion = 30; //???????????????
-
-        int fitnessMedio = 0;
-        Cromosoma mejorIndividuo = null;
+        int porcentajeDeMutacion = 2; //???????????????
+        int agregaNMejores = 3; //Agrega los mejores n cromosomas a la siguiente generacion
 
         ArrayList<Cromosoma> poblacion = generaPoblacionInicial(NIND, NREINAS);
         evaluaPoblacion(poblacion);
         Cromosoma mejorFitness = poblacion.get(0); //Mejor cromosoma
 
         while(generacionActual < MAXGEN && mejorFitness.getColisiones() != valorObjetivo){
-            poblacion = formaNuevaPoblacion(poblacion, mejorFitness, porcentajeDeNuevosIndividuos, porcentajeDeMutacion);
+            imprimePoblacion(poblacion);
+            System.out.println("*");
+            poblacion = formaNuevaPoblacion(poblacion, mejorFitness, porcentajeDeNuevosIndividuos, porcentajeDeMutacion, NREINAS);
+            imprimePoblacion(poblacion);
+            System.out.println("*");
+            evaluaPoblacion(poblacion);
+            imprimePoblacion(poblacion);
+            mejorFitness = poblacion.get(0);
+            System.out.println("------------Generacion: " + generacionActual + " mejorFitness: " + mejorFitness.getColisiones() + "-------------------");
             generacionActual++;
         }
         
     }
 
-    public static ArrayList<Cromosoma> formaNuevaPoblacion(ArrayList<Cromosoma> poblacion, Cromosoma ObjV, int pIndividuos, int pMutacion){
-        
-        return null;
+    /**
+     * Metodo que genera una nueva poblacion
+     * @param poblacion
+     * @param ObjV
+     * @param pIndividuos
+     * @param pMutacion
+     * @param NREINAS
+     * @return
+     */
+    public static ArrayList<Cromosoma> formaNuevaPoblacion(ArrayList<Cromosoma> poblacion, Cromosoma ObjV, int pIndividuos, int pMutacion, int NREINAS){
+        int agregaNMejores = 3; //Agrega los mejores n cromosomas a la siguiente generacion
+        int numeroDeNuevosCromosomas = poblacion.size() * pIndividuos / 100; //Se creara este porcentaje de nuevos cromosomas
+        int porcentajeDeMutacion = pMutacion; //TODO Preguntar como se debe hacer el porcentaje, de momento tomo pMutacion
+        ArrayList<Cromosoma> mejoresCromosomas = agregaNMejores(poblacion, agregaNMejores);
+        ArrayList<Cromosoma> hijos = cruce(mejoresCromosomas, numeroDeNuevosCromosomas);
+        muta(hijos, porcentajeDeMutacion, NREINAS);
+        mejoresCromosomas.addAll(hijos); //Unimos las dos listas
+        return mejoresCromosomas;
     }
 
-    // /**
-    //  * Evalua toda la poblacion y decide cuales cromosomas iran a la siguiente generacion
-    //  * @param poblacion
-    //  * @return candidatos Regresa los mejores tres candidatos a solucion
-    //  */
-    // public static ArrayList<Cromosoma> evaluaPoblacion(ArrayList<Cromosoma> poblacion){
-    //     ArrayList<Cromosoma> candidatos = new ArrayList<>();
-    //     for(Cromosoma cromosoma : poblacion) evaluaCromosoma(cromosoma);
-    //     Collections.sort(poblacion); //Ordenamos la poblacion de menor a mayor numero de colisiones
-    //     //TODO Hacer dinamico, regresa a los tres mejores candidatos a solucion
-    //     candidatos.add(poblacion.get(0));
-    //     candidatos.add(poblacion.get(1));
-    //     candidatos.add(poblacion.get(2));
-    //     return candidatos;
-    // }
+    /**
+     * Metodo que muta los valores de las filas
+     * @param poblacion
+     * @param pMutacion
+     * @param NREINAS
+     */
+    public static void muta(ArrayList<Cromosoma> poblacion, int pMutacion, int NREINAS){
+        Random ran = new Random();
+        for(Cromosoma cromosoma : poblacion){
+            for(int i = 0; i<cromosoma.getTablero().length; i++)    
+                if(ran.nextInt(pMutacion)==1) cromosoma.getTablero()[i] = ran.nextInt(NREINAS); //da 1/pMutacion probabilidades de ser cierto
+
+        }
+    }
+
+    /**
+     * Metodo que se encarga de cruzar los cromosomas y agregarlos a la poblacion para su posterior mutacion
+     * @param poblacion
+     * @param numeroDeNuevosCromosomas
+     * @return arraylist de los hijos creados listos para su mutacion
+     */
+    public static ArrayList<Cromosoma> cruce(ArrayList<Cromosoma> poblacion, int numeroDeNuevosCromosomas){
+        ArrayList<Cromosoma> resultado = new ArrayList<>();
+        Random rand = new Random();
+        Cromosoma progenitor1, progenitor2, hijo;
+        for(int i=0; i<numeroDeNuevosCromosomas; i++){
+            progenitor1 = poblacion.get(rand.nextInt(poblacion.size()));
+            progenitor2 = poblacion.get(rand.nextInt(poblacion.size()));
+            int[] mezcla = new int[progenitor1.getTablero().length];
+            for(int j = 0; j<mezcla.length-1; j++){
+                if(j == mezcla.length/2-1) mezcla[j] = progenitor2.getTablero()[j];
+                else mezcla[j] = progenitor1.getTablero()[j];
+            }
+            hijo = new Cromosoma(mezcla);
+            resultado.add(hijo);
+        }
+        return resultado;
+    }
+
+    /**
+     * Metodo que agrega los primeros n cromosomas a la nueva poblacion
+     * @param poblacion
+     * @param nuevaPoblacion
+     * @param n
+     */
+    public static ArrayList<Cromosoma> agregaNMejores(ArrayList<Cromosoma> poblacion, int n){
+        ArrayList<Cromosoma> nuevaPoblacion = new ArrayList<>();
+        if(n > poblacion.size() || n <= 0) return poblacion;
+        for(int i = 0; i<n; i++){
+            nuevaPoblacion.add(poblacion.get(i));
+        }
+        return nuevaPoblacion;
+    }
 
     /**
      * Evalua toda la poblacion y ordena de menor a mayor numero de colisiones la poblacion
@@ -70,7 +133,7 @@ public class NReinas {
     public static void evaluaCromosoma(Cromosoma cromosoma){
         int colisionesTotales = 0, longitud = cromosoma.getTablero().length-1;
         for(int i = 0; i<longitud; i++){
-            for(int j = 0; j<longitud; j++){
+            for(int j = i+1; j<longitud; j++){
                 boolean colision = (i-j) == (cromosoma.getTablero()[i]-cromosoma.getTablero()[j]); //True si existe una colision
                 if(colision) colisionesTotales++;
             }

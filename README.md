@@ -16,9 +16,13 @@ Pasos para resolver el problema
     Entre más conflictos haya más erronea es la solucion y, por lo tanto para una solucion correcta el resultado de la funcion de fitness debe ser 0 (cero conflictos).
     En este caso se utiliza esta función:
     Sea la n-tupla de reinas [0,1,...i,...,j...,n], las reinas las reinas i,j tendran un conflicto en la diagonal si: i-Ri = j-Rj o i+Ri = j+Rj que se reduce a ||Ri - Rj|| = ||i - j||.
+    Sumamos todos los conflictos posibles de un n-tupla.
     Esto quiere decir que si la por ejemplo tenemos cromosoma = [5,6,4,0,3,7,2,1] y tomamos a
     Ri = cromosoma[0] -> i = 5
     Rj = cromosoma[1] -> j = 6
     nos preguntamos, ¿tienen conflicto? pues en este caso si, por que ||0 - 1|| = ||6 - 5|| => True
 
+3.- Nueva generacion
+    Se seleccionan los n cromosomas mas aptos (menor numero de colisiones) y se llevan a la siguiente generacion.
+    Por medio de ruleta se seleccionan los cromosomas a cruzarse para generar nuevos cromosomas.
     
