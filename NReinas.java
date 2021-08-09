@@ -22,8 +22,8 @@ public class NReinas {
         Cromosoma mejorIndividuo = null;
 
         ArrayList<Cromosoma> poblacion = generaPoblacionInicial(NIND, NREINAS);
-        ArrayList<Cromosoma> mejoresPoblacionInicial = evaluaPoblacion(poblacion);
-        Cromosoma mejorFitness = mejoresPoblacionInicial.get(0); //Mejor cromosoma
+        evaluaPoblacion(poblacion);
+        Cromosoma mejorFitness = poblacion.get(0); //Mejor cromosoma
 
         while(generacionActual < MAXGEN && mejorFitness.getColisiones() != valorObjetivo){
             poblacion = formaNuevaPoblacion(poblacion, mejorFitness, porcentajeDeNuevosIndividuos, porcentajeDeMutacion);
