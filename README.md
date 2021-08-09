@@ -24,5 +24,7 @@ Pasos para resolver el problema
 
 3.- Nueva generacion
     Se seleccionan los n cromosomas mas aptos (menor numero de colisiones) y se llevan a la siguiente generacion.
-    Por medio de ruleta se seleccionan los cromosomas a cruzarse para generar nuevos cromosomas.
+    Se seleccionan los cromosomas a cruzarse y posteriormente a mutarse
+
+4.- Se repite hasta que se llegue a la n-tuplas con 0 conflictos o se llegue al limite de generaciones impuesto.
     

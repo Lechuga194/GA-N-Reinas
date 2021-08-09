@@ -1,38 +1,53 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 
 public class NReinas {
     public static void main(String[] args) {
-        int NIND = 100; //Numero de individuos (cromosomas)
-        int NREINAS = 30; //Numero de reinas
-        final int MAXGEN = 5; //Maximo numero de generaciones
-        algoritmoGeneticoNReinas(MAXGEN, NIND, NREINAS);
+        Scanner sc = new Scanner(System.in);
+        int NIND = 10; //Numero de individuos (cromosomas)
+        int NREINAS = 8; //Numero de reinas
+        int MAXGEN = 5; //Maximo numero de generaciones
+        int seleccion;
+        System.out.print("Ingresa el numero de reinas o ingresa 0 para correr el programa con los parametros por defecto: ");
+        seleccion = sc.nextInt();
+        if (seleccion <= 0) algoritmoGeneticoNReinas(MAXGEN, NIND, NREINAS);
+        else {
+            NREINAS = seleccion;
+            System.out.print("Ingresa el numero maximo de generaciones: ");
+            MAXGEN = sc.nextInt();
+            System.out.print("Ingresa el tamaño de la poblacion inicial (se generan aleatoriamente): ");
+            NIND = sc.nextInt();
+            algoritmoGeneticoNReinas(MAXGEN, NIND, NREINAS);
+        }
     }
 
     public static void algoritmoGeneticoNReinas(int MAXGEN, int NIND, int NREINAS){
         int valorObjetivo = 0; //Numero de colisiones objetivo
-        int generacionActual = 0;
+        int generacionActual = 1;
         int porcentajeDeNuevosIndividuos = 70; //70 ya que se escogen 3 los tres mejores individuos y hay un maximo de 10
         int porcentajeDeMutacion = 2; //
 
         ArrayList<Cromosoma> poblacion = generaPoblacionInicial(NIND, NREINAS);
         evaluaPoblacion(poblacion);
         Cromosoma mejorFitness = poblacion.get(0); //Mejor cromosoma
+        System.out.println("Población inicial");
+        imprimePoblacion(poblacion);
 
-        while(mejorFitness.getColisiones() != valorObjetivo){
+        while(generacionActual < MAXGEN && mejorFitness.getColisiones() != valorObjetivo){
+            System.out.println("------------Creando generacion # " + generacionActual + "----------------------------");
             poblacion = formaNuevaPoblacion(poblacion, mejorFitness, porcentajeDeNuevosIndividuos, porcentajeDeMutacion, NREINAS);
             evaluaPoblacion(poblacion);
             mejorFitness = poblacion.get(0);
-            System.out.println("------------Generacion: " + generacionActual + " mejorFitness: " + mejorFitness.getColisiones() + "-------------------");
+            System.out.print("Mejor individuo de la generación: ");
+            mejorFitness.imprime();
             generacionActual++;
         }
 
-        System.out.println("Mejor solucion encontrada con  " + mejorFitness.getColisiones() + " colisiones es:");
+        System.out.print("Mejor solucion encontrada en la generación #" + generacionActual + " es: ");
         mejorFitness.imprime();
-        
         
     }
 
