@@ -6,39 +6,33 @@ import java.util.Random;
 
 public class NReinas {
     public static void main(String[] args) {
-        int NIND = 10; //Numero de individuos (cromosomas)
-        int NREINAS = 8; //Numero de reinas
+        int NIND = 100; //Numero de individuos (cromosomas)
+        int NREINAS = 30; //Numero de reinas
         final int MAXGEN = 5; //Maximo numero de generaciones
         algoritmoGeneticoNReinas(MAXGEN, NIND, NREINAS);
-        // int[] a = new int[] {2,4,7,3,0,6,1,5}; //Esto da 0 colisiones
-        // Cromosoma n = new Cromosoma(a);
-        // evaluaCromosoma(n);
-        // System.out.println(n.getColisiones());
     }
 
     public static void algoritmoGeneticoNReinas(int MAXGEN, int NIND, int NREINAS){
         int valorObjetivo = 0; //Numero de colisiones objetivo
         int generacionActual = 0;
         int porcentajeDeNuevosIndividuos = 70; //70 ya que se escogen 3 los tres mejores individuos y hay un maximo de 10
-        int porcentajeDeMutacion = 2; //???????????????
-        int agregaNMejores = 3; //Agrega los mejores n cromosomas a la siguiente generacion
+        int porcentajeDeMutacion = 2; //
 
         ArrayList<Cromosoma> poblacion = generaPoblacionInicial(NIND, NREINAS);
         evaluaPoblacion(poblacion);
         Cromosoma mejorFitness = poblacion.get(0); //Mejor cromosoma
 
-        while(generacionActual < MAXGEN && mejorFitness.getColisiones() != valorObjetivo){
-            imprimePoblacion(poblacion);
-            System.out.println("*");
+        while(mejorFitness.getColisiones() != valorObjetivo){
             poblacion = formaNuevaPoblacion(poblacion, mejorFitness, porcentajeDeNuevosIndividuos, porcentajeDeMutacion, NREINAS);
-            imprimePoblacion(poblacion);
-            System.out.println("*");
             evaluaPoblacion(poblacion);
-            imprimePoblacion(poblacion);
             mejorFitness = poblacion.get(0);
             System.out.println("------------Generacion: " + generacionActual + " mejorFitness: " + mejorFitness.getColisiones() + "-------------------");
             generacionActual++;
         }
+
+        System.out.println("Mejor solucion encontrada con  " + mejorFitness.getColisiones() + " colisiones es:");
+        mejorFitness.imprime();
+        
         
     }
 
