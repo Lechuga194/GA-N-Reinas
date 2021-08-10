@@ -37,7 +37,7 @@ public class NReinas {
         imprimePoblacion(poblacion);
 
         while(generacionActual < MAXGEN && mejorFitness.getColisiones() != valorObjetivo){
-            System.out.println("------------Creando generacion # " + generacionActual + "----------------------------");
+            System.out.println("------------Creando generacion # " + (generacionActual + 1) + "----------------------------");
             poblacion = formaNuevaPoblacion(poblacion, mejorFitness, porcentajeDeNuevosIndividuos, porcentajeDeMutacion, NREINAS);
             evaluaPoblacion(poblacion);
             mejorFitness = poblacion.get(0);

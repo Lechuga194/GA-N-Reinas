@@ -1,3 +1,11 @@
+Lechuga Martínez José Eduardo
+314325749
+
+# Instrucciones
+1.- Abrir una termina en la carpeta y usar el comando "javac *.java"
+2.- Ejecutar el comando "java NReinas"
+3.- Introducir los datos al programa
+
 # GA-N-Reinas
 Algoritmo genético para resolver el problema de las N-Reinas
 
